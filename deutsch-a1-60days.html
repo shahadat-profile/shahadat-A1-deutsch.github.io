@@ -1,0 +1,1291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Deutsch A1 — 60-Day Coach</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,500;9..144,700;9..144,900&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap');
+
+/* ── TOKENS ── */
+:root {
+  --ink:      #1a1610;
+  --ink2:     #2d2820;
+  --ink3:     #3f3830;
+  --border:   #4a4035;
+  --amber:    #e8a530;
+  --amber-d:  #c4841a;
+  --amber-l:  #f5c96a;
+  --sage:     #7ab57a;
+  --rose:     #d96060;
+  --sky:      #5b9bd5;
+  --text:     #f0ebe0;
+  --text2:    #c8bfa8;
+  --text3:    #8a7f6a;
+  --paper:    #f7f2e8;
+  --xp:       #e8a530;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--ink);
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+  min-height: 100vh;
+}
+
+/* ── TOPBAR ── */
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 200;
+  background: var(--ink2);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 0 20px;
+  height: 54px;
+}
+.logo {
+  font-family: 'Fraunces', serif;
+  font-weight: 900;
+  font-size: 20px;
+  letter-spacing: -0.5px;
+  white-space: nowrap;
+}
+.logo em { color: var(--amber); font-style: normal; }
+.level-pill {
+  background: var(--amber);
+  color: var(--ink);
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  font-weight: 500;
+  padding: 3px 9px;
+  border-radius: 20px;
+  white-space: nowrap;
+}
+.xp-wrap {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+.xp-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  color: var(--text3);
+  white-space: nowrap;
+}
+.xp-bar {
+  flex: 1;
+  height: 6px;
+  background: var(--ink3);
+  border-radius: 3px;
+  overflow: hidden;
+  min-width: 40px;
+}
+.xp-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--amber-d), var(--amber));
+  border-radius: 3px;
+  transition: width 0.6s ease;
+}
+.streak-tag {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--amber);
+  white-space: nowrap;
+}
+
+/* ── LAYOUT ── */
+.shell {
+  display: grid;
+  grid-template-columns: 240px 1fr;
+  min-height: calc(100vh - 54px);
+}
+
+/* ── SIDEBAR ── */
+.sidebar {
+  background: var(--ink2);
+  border-right: 1px solid var(--border);
+  overflow-y: auto;
+  position: sticky;
+  top: 54px;
+  max-height: calc(100vh - 54px);
+  scrollbar-width: thin;
+  scrollbar-color: var(--border) transparent;
+}
+.sb-week {
+  border-bottom: 1px solid var(--border);
+}
+.sb-week-head {
+  padding: 10px 16px 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.sb-week-name {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--text3);
+}
+.sb-week-prog {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px;
+  color: var(--sage);
+}
+.sb-day {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 7px 16px;
+  cursor: pointer;
+  border: none;
+  background: none;
+  color: var(--text3);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 12px;
+  width: 100%;
+  text-align: left;
+  border-left: 2px solid transparent;
+  transition: background 0.1s, color 0.1s;
+}
+.sb-day:hover { background: var(--ink3); color: var(--text2); }
+.sb-day.is-active { background: rgba(232,165,48,0.1); color: var(--amber); border-left-color: var(--amber); }
+.sb-day.is-done { color: var(--sage); }
+.sb-day.is-done.is-active { background: rgba(122,181,122,0.08); border-left-color: var(--sage); }
+.sb-num {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.sb-day.is-active .sb-num { border-color: var(--amber); }
+.sb-day.is-done .sb-num { border-color: var(--sage); background: rgba(122,181,122,0.12); }
+.sb-day-title { line-height: 1.3; }
+
+/* ── CONTENT ── */
+.content {
+  overflow-y: auto;
+  max-height: calc(100vh - 54px);
+  padding: 36px 32px 80px;
+}
+
+/* ── WELCOME ── */
+.welcome {
+  max-width: 580px;
+  margin: 40px auto;
+  text-align: center;
+}
+.welcome-flag { font-size: 64px; margin-bottom: 20px; }
+.welcome h2 {
+  font-family: 'Fraunces', serif;
+  font-weight: 900;
+  font-size: 36px;
+  letter-spacing: -1px;
+  margin-bottom: 10px;
+}
+.welcome h2 em { color: var(--amber); font-style: normal; }
+.welcome p { color: var(--text2); font-size: 15px; line-height: 1.7; margin-bottom: 28px; }
+.welcome-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  text-align: left;
+  margin-bottom: 28px;
+}
+.w-card {
+  background: var(--ink2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 14px 16px;
+  font-size: 13px;
+  color: var(--text2);
+}
+.w-card strong { display: block; color: var(--text); font-size: 14px; margin-bottom: 3px; }
+.btn-start {
+  background: var(--amber);
+  color: var(--ink);
+  border: none;
+  padding: 14px 32px;
+  border-radius: 8px;
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 600;
+  font-size: 15px;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.btn-start:hover { background: var(--amber-l); }
+
+/* ── DAY HEADER ── */
+.day-hd {
+  max-width: 700px;
+  margin-bottom: 28px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid var(--border);
+}
+.day-eye {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--amber);
+  margin-bottom: 8px;
+}
+.day-hd h1 {
+  font-family: 'Fraunces', serif;
+  font-weight: 900;
+  font-size: 30px;
+  letter-spacing: -0.5px;
+  line-height: 1.1;
+  margin-bottom: 6px;
+}
+.day-hd .theme { color: var(--text2); font-size: 14px; margin-bottom: 18px; }
+.day-chips { display: flex; gap: 8px; flex-wrap: wrap; }
+.chip {
+  background: var(--ink2);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 4px 12px;
+  font-size: 12px;
+  color: var(--text3);
+}
+.chip b { color: var(--text2); }
+
+/* ── LOADING ── */
+.loading-wrap {
+  max-width: 420px;
+  margin: 60px auto;
+  text-align: center;
+}
+.spinner {
+  width: 52px; height: 52px;
+  border-radius: 50%;
+  border: 3px solid var(--border);
+  border-top-color: var(--amber);
+  animation: spin 0.9s linear infinite;
+  margin: 0 auto 24px;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+.loading-wrap h3 {
+  font-family: 'Fraunces', serif;
+  font-weight: 700;
+  font-size: 20px;
+  margin-bottom: 6px;
+}
+.loading-wrap p { color: var(--text3); font-size: 13px; margin-bottom: 24px; }
+.load-steps { text-align: left; display: inline-block; }
+.lstep {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+  color: var(--text3);
+  padding: 5px 0;
+  transition: color 0.3s;
+}
+.lstep.on { color: var(--amber); }
+.lstep.ok { color: var(--sage); }
+.lstep-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: var(--border);
+  flex-shrink: 0;
+  transition: background 0.3s;
+}
+.lstep.on .lstep-dot { background: var(--amber); }
+.lstep.ok .lstep-dot { background: var(--sage); }
+
+/* ── ACCORDION ── */
+.acc {
+  background: var(--ink2);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  margin-bottom: 14px;
+  max-width: 700px;
+  overflow: hidden;
+}
+.acc-head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 20px;
+  cursor: pointer;
+  user-select: none;
+  transition: background 0.1s;
+}
+.acc-head:hover { background: rgba(255,255,255,0.02); }
+.acc-ico {
+  width: 36px; height: 36px;
+  border-radius: 9px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 17px;
+  flex-shrink: 0;
+}
+.acc-info { flex: 1; }
+.acc-title { font-weight: 600; font-size: 14px; }
+.acc-sub { font-size: 12px; color: var(--text3); margin-top: 2px; }
+.acc-tag {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  color: var(--text3);
+  background: var(--ink3);
+  padding: 3px 8px;
+  border-radius: 4px;
+}
+.acc-chevron { color: var(--text3); font-size: 11px; transition: transform 0.2s; }
+.acc.open .acc-chevron { transform: rotate(180deg); }
+.acc-body {
+  display: none;
+  padding: 0 20px 20px;
+  border-top: 1px solid var(--border);
+}
+.acc.open .acc-body { display: block; padding-top: 18px; }
+
+/* ── PHRASES ── */
+.ph-hint { font-size: 12px; color: var(--text3); font-style: italic; margin-bottom: 12px; }
+.ph-list { display: grid; gap: 7px; }
+.ph-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr auto;
+  gap: 10px;
+  align-items: center;
+  padding: 10px 14px;
+  background: var(--ink3);
+  border: 1px solid var(--border);
+  border-radius: 9px;
+  cursor: pointer;
+  transition: border-color 0.12s;
+}
+.ph-row:hover { border-color: var(--amber-d); }
+.ph-row.done { border-color: rgba(122,181,122,0.5); }
+.ph-de { font-weight: 500; font-size: 14px; }
+.ph-en { font-size: 13px; color: var(--text3); }
+.ph-tick {
+  width: 20px; height: 20px;
+  border-radius: 50%;
+  border: 1.5px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 10px;
+  flex-shrink: 0;
+  transition: all 0.15s;
+}
+.ph-row.done .ph-tick { background: var(--sage); border-color: var(--sage); color: var(--ink); }
+
+/* ── VOCAB ── */
+.voc-section { margin-bottom: 18px; }
+.voc-section:last-child { margin-bottom: 0; }
+.voc-theme {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--amber);
+  margin-bottom: 9px;
+}
+.voc-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 7px;
+}
+.voc-card {
+  background: var(--ink3);
+  border: 1px solid var(--border);
+  border-radius: 9px;
+  padding: 11px 13px;
+  cursor: pointer;
+  min-height: 66px;
+  transition: border-color 0.12s, transform 0.12s;
+}
+.voc-card:hover { border-color: var(--sky); transform: translateY(-1px); }
+.voc-card.flipped { background: rgba(91,155,213,0.1); border-color: var(--sky); }
+.voc-de { font-weight: 600; font-size: 14px; }
+.voc-kind { font-family: 'DM Mono', monospace; font-size: 9px; color: var(--text3); margin-top: 2px; }
+.voc-en { font-size: 12px; color: var(--sky); margin-top: 7px; display: none; }
+.voc-card.flipped .voc-en { display: block; }
+.voc-card.flipped .voc-de { opacity: 0.45; font-size: 12px; }
+
+/* ── GRAMMAR ── */
+.gram-block { margin-bottom: 22px; }
+.gram-block:last-child { margin-bottom: 0; }
+.gram-rule {
+  border-left: 3px solid var(--amber);
+  padding: 10px 14px;
+  background: rgba(232,165,48,0.07);
+  border-radius: 0 8px 8px 0;
+  font-weight: 600;
+  font-size: 13px;
+  margin-bottom: 9px;
+  color: var(--text);
+}
+.gram-exs { display: grid; gap: 6px; }
+.gram-ex {
+  background: var(--ink3);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 9px 13px;
+}
+.gram-ex .de { font-size: 14px; }
+.gram-ex .en { font-size: 12px; color: var(--text3); margin-top: 3px; }
+.hl { color: var(--amber); font-weight: 700; }
+
+/* ── SPEAKING ── */
+.speak-tip {
+  background: rgba(91,155,213,0.07);
+  border: 1px solid rgba(91,155,213,0.2);
+  border-radius: 9px;
+  padding: 11px 14px;
+  font-size: 13px;
+  color: var(--text3);
+  margin-bottom: 14px;
+}
+.speak-tip strong { color: var(--sky); }
+.script-box {
+  background: var(--ink3);
+  border: 1px solid var(--border);
+  border-radius: 11px;
+  padding: 18px;
+  margin-bottom: 14px;
+  line-height: 1.5;
+}
+.sc-line { margin-bottom: 10px; }
+.sc-line:last-child { margin-bottom: 0; }
+.sc-who {
+  display: inline-block;
+  font-family: 'DM Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  padding: 2px 6px;
+  border-radius: 3px;
+  margin-right: 7px;
+  vertical-align: middle;
+}
+.who-a { background: rgba(232,165,48,0.15); color: var(--amber); }
+.who-b { background: rgba(91,155,213,0.15); color: var(--sky); }
+.sc-de { font-size: 14px; font-weight: 500; display: inline; }
+.sc-en { font-size: 12px; color: var(--text3); margin-top: 2px; padding-left: 38px; }
+.timer-row { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.timer-dig {
+  font-family: 'Fraunces', serif;
+  font-weight: 700;
+  font-size: 40px;
+  color: var(--amber);
+  min-width: 88px;
+  letter-spacing: -1px;
+}
+.btn-t {
+  background: var(--amber);
+  color: var(--ink);
+  border: none;
+  padding: 9px 20px;
+  border-radius: 7px;
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 600;
+  font-size: 13px;
+  cursor: pointer;
+  transition: background 0.12s;
+}
+.btn-t:hover { background: var(--amber-l); }
+.btn-tr {
+  background: none;
+  border: 1px solid var(--border);
+  color: var(--text3);
+  padding: 9px 16px;
+  border-radius: 7px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.12s;
+}
+.btn-tr:hover { border-color: var(--text3); color: var(--text2); }
+
+/* ── QUIZ ── */
+.quiz-note {
+  background: rgba(232,165,48,0.07);
+  border-left: 3px solid var(--amber);
+  padding: 10px 14px;
+  border-radius: 0 8px 8px 0;
+  font-size: 13px;
+  color: var(--text3);
+  margin-bottom: 16px;
+}
+.q-card {
+  background: var(--ink3);
+  border: 1px solid var(--border);
+  border-radius: 11px;
+  padding: 16px 18px;
+  margin-bottom: 12px;
+  transition: border-color 0.2s;
+}
+.q-card.q-ok { border-color: rgba(122,181,122,0.5); }
+.q-card.q-bad { border-color: rgba(217,96,96,0.5); }
+.q-num { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--text3); margin-bottom: 7px; }
+.q-text { font-size: 15px; font-weight: 600; margin-bottom: 12px; }
+.q-opts { display: grid; gap: 6px; }
+.q-opt {
+  background: var(--ink2);
+  border: 1px solid var(--border);
+  color: var(--text);
+  padding: 9px 14px;
+  border-radius: 7px;
+  cursor: pointer;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  text-align: left;
+  transition: all 0.12s;
+}
+.q-opt:hover:not(:disabled) { border-color: var(--amber-d); background: rgba(232,165,48,0.05); }
+.q-opt.sel { border-color: var(--amber); background: rgba(232,165,48,0.08); }
+.q-opt.ok { border-color: var(--sage); background: rgba(122,181,122,0.1); color: var(--sage); }
+.q-opt.bad { border-color: var(--rose); background: rgba(217,96,96,0.08); color: var(--rose); }
+.q-fb { margin-top: 9px; font-size: 12px; color: var(--text3); padding: 7px 10px; background: rgba(255,255,255,0.03); border-radius: 6px; }
+.btn-check {
+  width: 100%;
+  background: var(--amber);
+  color: var(--ink);
+  border: none;
+  padding: 13px;
+  border-radius: 9px;
+  font-family: 'Fraunces', serif;
+  font-weight: 700;
+  font-size: 15px;
+  cursor: pointer;
+  margin-top: 4px;
+  transition: background 0.12s;
+}
+.btn-check:hover { background: var(--amber-l); }
+.score-card {
+  background: var(--ink3);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 28px;
+  text-align: center;
+  margin-bottom: 16px;
+}
+.score-big {
+  font-family: 'Fraunces', serif;
+  font-weight: 900;
+  font-size: 60px;
+  letter-spacing: -2px;
+  line-height: 1;
+  margin-bottom: 4px;
+}
+.score-lbl { font-size: 13px; color: var(--text3); margin-bottom: 12px; }
+.score-msg { font-family: 'Fraunces', serif; font-size: 18px; font-weight: 700; }
+
+/* ── COMPLETE ── */
+.complete-box {
+  max-width: 700px;
+  background: linear-gradient(135deg, rgba(232,165,48,0.08), rgba(122,181,122,0.06));
+  border: 1px solid rgba(232,165,48,0.3);
+  border-radius: 14px;
+  padding: 24px;
+  margin-top: 20px;
+  text-align: center;
+}
+.complete-box h3 { font-family: 'Fraunces', serif; font-weight: 700; font-size: 18px; margin-bottom: 6px; }
+.complete-box p { color: var(--text2); font-size: 13px; margin-bottom: 16px; }
+.btn-complete {
+  background: var(--sage);
+  color: var(--ink);
+  border: none;
+  padding: 11px 26px;
+  border-radius: 7px;
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  margin: 4px;
+  transition: opacity 0.12s;
+}
+.btn-complete:hover { opacity: 0.85; }
+.btn-next-day {
+  background: var(--amber);
+  color: var(--ink);
+  border: none;
+  padding: 11px 26px;
+  border-radius: 7px;
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  margin: 4px;
+  transition: opacity 0.12s;
+}
+.btn-next-day:hover { opacity: 0.85; }
+
+/* ── ERROR ── */
+.err-box {
+  max-width: 500px;
+  margin: 60px auto;
+  background: rgba(217,96,96,0.07);
+  border: 1px solid rgba(217,96,96,0.25);
+  border-radius: 12px;
+  padding: 28px;
+  text-align: center;
+  color: var(--rose);
+}
+.err-box h3 { font-family: 'Fraunces', serif; font-size: 20px; font-weight: 700; margin-bottom: 8px; }
+.err-box p { color: var(--text3); font-size: 13px; margin-bottom: 16px; }
+.btn-retry {
+  background: var(--rose);
+  color: #fff;
+  border: none;
+  padding: 10px 22px;
+  border-radius: 7px;
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/* ── RESPONSIVE ── */
+@media (max-width: 680px) {
+  .shell { grid-template-columns: 1fr; }
+  .sidebar { position: static; max-height: 200px; border-right: none; border-bottom: 1px solid var(--border); }
+  .content { max-height: none; padding: 20px 14px 60px; }
+  .ph-row { grid-template-columns: 1fr auto; }
+  .ph-en { display: none; }
+  .welcome-grid { grid-template-columns: 1fr; }
+  .topbar { gap: 8px; padding: 0 12px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .spinner { animation: none; border-color: var(--amber); }
+  * { transition-duration: 1ms !important; }
+}
+</style>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<header class="topbar">
+  <div class="logo">Deutsch<em>A1</em></div>
+  <div class="level-pill">A1 Beginner</div>
+  <div class="xp-wrap">
+    <div class="xp-label">XP</div>
+    <div class="xp-bar"><div class="xp-fill" id="xpFill" style="width:0%"></div></div>
+    <div class="xp-label" id="xpLabel">0 / 600</div>
+  </div>
+  <div class="streak-tag">🔥 <span id="streakNum">0</span></div>
+</header>
+
+<div class="shell">
+  <!-- SIDEBAR -->
+  <nav class="sidebar" id="sidebar"></nav>
+
+  <!-- CONTENT -->
+  <main class="content" id="content">
+    <div class="welcome">
+      <div class="welcome-flag">🇩🇪</div>
+      <h2>Willkommen zu deinem <em>60-Tage</em> Kurs</h2>
+      <p>Your personal AI language coach will generate a fresh, A1-level lesson every day — phrases, vocabulary, grammar, a speaking script, and a quiz. No textbooks. Real German, from day one.</p>
+      <div class="welcome-grid">
+        <div class="w-card"><strong>💬 20 Phrases</strong>Natural A1 conversation starters for each day's topic</div>
+        <div class="w-card"><strong>📚 15 Vocab Words</strong>Grouped by Work, Social & Travel themes</div>
+        <div class="w-card"><strong>⚙️ 5 Grammar Rules</strong>Simple, explained with 3 real examples each</div>
+        <div class="w-card"><strong>🎙️ Speaking Script</strong>A short dialogue to read aloud with a timer</div>
+        <div class="w-card"><strong>🧠 Daily Quiz</strong>5 questions to test real comprehension</div>
+        <div class="w-card"><strong>⭐ XP & Streaks</strong>Earn points, track your streak, mark days done</div>
+      </div>
+      <button class="btn-start" onclick="selectDay(0)">Start Tag 1 →</button>
+    </div>
+  </main>
+</div>
+
+<script>
+// ═══════════════════════════════════════
+// 60-DAY A1 PLAN
+// ═══════════════════════════════════════
+const PLAN = [
+  // WEEK 1 — First Words
+  {w:1, title:"Hallo! Ich bin…",    theme:"Greetings, names & saying hello"},
+  {w:1, title:"Wie geht's?",        theme:"Asking how someone is & simple replies"},
+  {w:1, title:"Zahlen 1–20",        theme:"Numbers, counting & basic quantities"},
+  {w:1, title:"Familie",            theme:"Family members & close relationships"},
+  {w:1, title:"Farben & Formen",    theme:"Colours, shapes & basic descriptions"},
+  {w:1, title:"Die Woche",          theme:"Days of the week & simple scheduling"},
+  {w:1, title:"Woche 1 — Review",   theme:"Consolidation of all Week 1 topics"},
+  // WEEK 2 — Getting Around
+  {w:2, title:"Wo ist…?",           theme:"Asking for & giving simple directions"},
+  {w:2, title:"Im Supermarkt",      theme:"Food shopping & everyday groceries"},
+  {w:2, title:"Das Wetter",         theme:"Weather words & talking about today's weather"},
+  {w:2, title:"Die Uhrzeit",        theme:"Telling the time & daily schedules"},
+  {w:2, title:"Monate & Jahreszeiten", theme:"Months, seasons & dates"},
+  {w:2, title:"Transportmittel",    theme:"Bus, train, bike & getting around"},
+  {w:2, title:"Woche 2 — Review",   theme:"Consolidation of all Week 2 topics"},
+  // WEEK 3 — People & Places
+  {w:3, title:"Berufe",             theme:"Jobs, occupations & what people do"},
+  {w:3, title:"Im Café",            theme:"Ordering drinks & snacks at a café"},
+  {w:3, title:"Zuhause",            theme:"Rooms of the house & furniture"},
+  {w:3, title:"Im Restaurant",      theme:"Menu, ordering food & paying the bill"},
+  {w:3, title:"Kleidung",           theme:"Clothes, sizes & shopping for fashion"},
+  {w:3, title:"Körper & Gesundheit",theme:"Body parts & saying you don't feel well"},
+  {w:3, title:"Woche 3 — Review",   theme:"Consolidation of all Week 3 topics"},
+  // WEEK 4 — Daily Routines
+  {w:4, title:"Mein Tag",           theme:"Daily routines & morning habits"},
+  {w:4, title:"Essen & Trinken",    theme:"Food preferences, likes & dislikes"},
+  {w:4, title:"Sport & Hobbys",     theme:"Favourite activities & free time"},
+  {w:4, title:"Am Telefon",         theme:"Simple phone calls & leaving a message"},
+  {w:4, title:"Im Büro",            theme:"Basic office vocabulary & greetings at work"},
+  {w:4, title:"Meine Stadt",        theme:"Places in a city & describing where you live"},
+  {w:4, title:"Woche 4 — Review",   theme:"Consolidation of all Week 4 topics"},
+  // WEEK 5 — Describing the World
+  {w:5, title:"Wie ist es?",        theme:"Adjectives for describing people & things"},
+  {w:5, title:"Possessive",         theme:"My, your, his, her — possessives in German"},
+  {w:5, title:"Im Hotel",           theme:"Checking in, room vocabulary & requests"},
+  {w:5, title:"Auf Reisen",         theme:"At the airport & travelling abroad"},
+  {w:5, title:"Einkaufen",          theme:"Prices, quantities & buying things"},
+  {w:5, title:"Arztbesuch",         theme:"At the doctor — symptoms & simple advice"},
+  {w:5, title:"Woche 5 — Review",   theme:"Consolidation of all Week 5 topics"},
+  // WEEK 6 — Social German
+  {w:6, title:"Einladungen",        theme:"Inviting friends & making plans"},
+  {w:6, title:"Geburtstag",         theme:"Birthdays, presents & celebrations"},
+  {w:6, title:"Entschuldigung!",    theme:"Apologising, excusing & being polite"},
+  {w:6, title:"Danke & Bitte",      theme:"Politeness, gratitude & requests"},
+  {w:6, title:"Likes & Dislikes",   theme:"Expressing what you love and hate"},
+  {w:6, title:"Über mich",          theme:"Talking about yourself — background & personality"},
+  {w:6, title:"Woche 6 — Review",   theme:"Consolidation of all Week 6 topics"},
+  // WEEK 7 — Building Sentences
+  {w:7, title:"Negation",           theme:"Saying 'no', 'not' & 'none' — kein & nicht"},
+  {w:7, title:"Fragen stellen",     theme:"Asking questions — W-Fragen & yes/no"},
+  {w:7, title:"Modalverben",        theme:"können, müssen, wollen — modal verbs in action"},
+  {w:7, title:"Trennbare Verben",   theme:"Separable verbs — aufstehen, anrufen & more"},
+  {w:7, title:"Perfekt",            theme:"Talking about the past — haben & sein + Partizip"},
+  {w:7, title:"Zukunft",            theme:"Talking about future plans — werden & morgen"},
+  {w:7, title:"Woche 7 — Review",   theme:"Consolidation of all Week 7 grammar topics"},
+  // WEEK 8 — Real Conversations
+  {w:8, title:"Smalltalk",          theme:"Making small talk — weather, weekend & news"},
+  {w:8, title:"Im Supermarkt",      theme:"Shopping conversation — finding items & prices"},
+  {w:8, title:"Reisegespräch",      theme:"Conversation on a train — where are you going?"},
+  {w:8, title:"Beim Arzt",          theme:"Full doctor conversation — appointment to advice"},
+  {w:8, title:"Jobgespräch A1",     theme:"Simple job interview — who are you & what do you do?"},
+  {w:8, title:"Brief schreiben",    theme:"Writing a simple postcard or short message"},
+  {w:8, title:"Woche 8 — Review",   theme:"Consolidation of all Week 8 topics"},
+  // FINAL DAYS
+  {w:9, title:"Alles zusammen I",   theme:"Grand review — Weeks 1–4 highlights"},
+  {w:9, title:"Alles zusammen II",  theme:"Grand review — Weeks 5–8 highlights"},
+  {w:9, title:"Prüfung — Speaking", theme:"A1 speaking test simulation — full conversation"},
+  {w:9, title:"🎓 A1 Abschluss",   theme:"Graduation day — your A1 certificate challenge"},
+];
+
+// ═══════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════
+const S = {
+  current: null,
+  cache: {},
+  learned: {},
+  flipped: {},
+  qAns: {},
+  qDone: {},
+  done: {},
+  openSec: { ph:true, voc:false, gram:false, speak:false, quiz:false },
+  timer: { s:180, running:false, iv:null }
+};
+
+function save() {
+  try {
+    localStorage.setItem('da1_v2', JSON.stringify({
+      learned:S.learned, flipped:S.flipped, qAns:S.qAns,
+      qDone:S.qDone, done:S.done, cache:S.cache
+    }));
+  } catch(e){}
+}
+function load() {
+  try {
+    const d = JSON.parse(localStorage.getItem('da1_v2')||'{}');
+    Object.assign(S.learned, d.learned||{});
+    Object.assign(S.flipped, d.flipped||{});
+    Object.assign(S.qAns, d.qAns||{});
+    Object.assign(S.qDone, d.qDone||{});
+    Object.assign(S.done, d.done||{});
+    Object.assign(S.cache, d.cache||{});
+  } catch(e){}
+}
+
+function xp() {
+  const total = Object.values(S.done).filter(Boolean).length * 10;
+  document.getElementById('xpFill').style.width = Math.min(100,(total/600)*100)+'%';
+  document.getElementById('xpLabel').textContent = total+' / 600';
+  let streak = 0;
+  for(let i=0;i<60;i++){if(S.done[i])streak++;else break;}
+  document.getElementById('streakNum').textContent = streak;
+}
+
+// ═══════════════════════════════════════
+// SIDEBAR
+// ═══════════════════════════════════════
+function buildSidebar() {
+  const weeks = {};
+  PLAN.forEach((d,i)=>{ if(!weeks[d.w]) weeks[d.w]=[]; weeks[d.w].push({d,i}); });
+  document.getElementById('sidebar').innerHTML = Object.entries(weeks).map(([wk,days])=>{
+    const done = days.filter(({i})=>S.done[i]).length;
+    return `<div class="sb-week">
+      <div class="sb-week-head">
+        <div class="sb-week-name">Woche ${wk}${+wk===9?' · Final':''}</div>
+        <div class="sb-week-prog">${done}/${days.length}</div>
+      </div>
+      ${days.map(({d,i})=>`
+        <button class="sb-day ${S.current===i?'is-active':''} ${S.done[i]?'is-done':''}" onclick="selectDay(${i})">
+          <div class="sb-num">${S.done[i]?'✓':(i+1)}</div>
+          <div class="sb-day-title">${d.title}</div>
+        </button>`).join('')}
+    </div>`;
+  }).join('');
+  xp();
+}
+
+// ═══════════════════════════════════════
+// SELECT DAY
+// ═══════════════════════════════════════
+function selectDay(idx) {
+  S.current = idx;
+  S.openSec = {ph:true,voc:false,gram:false,speak:false,quiz:false};
+  stopTimer();
+  buildSidebar();
+  if(S.cache[idx]) { renderDay(idx, S.cache[idx]); return; }
+  showLoading(idx);
+  genContent(idx);
+}
+
+// ═══════════════════════════════════════
+// LOADING UI
+// ═══════════════════════════════════════
+function showLoading(idx) {
+  const d = PLAN[idx];
+  document.getElementById('content').innerHTML = `
+    <div class="loading-wrap">
+      <div class="spinner"></div>
+      <h3>Einen Moment…</h3>
+      <p>Your coach is preparing Tag ${idx+1}: <em>${d.title}</em></p>
+      <div class="load-steps">
+        ${['Building 20 phrases…','Selecting vocabulary…','Writing grammar notes…','Scripting dialogue…','Setting the quiz…']
+          .map((t,i)=>`<div class="lstep ${i===0?'on':''}" id="ls${i}"><div class="lstep-dot"></div>${t}</div>`).join('')}
+      </div>
+    </div>`;
+  [0,600,1400,2300,3400].forEach((ms,i)=>setTimeout(()=>tickLoad(i),ms));
+}
+function tickLoad(step) {
+  for(let i=0;i<5;i++){
+    const el=document.getElementById('ls'+i);
+    if(el) el.className='lstep '+(i<step?'ok':i===step?'on':'');
+  }
+}
+
+// ═══════════════════════════════════════
+// AI GENERATION
+// ═══════════════════════════════════════
+async function genContent(idx) {
+  const d = PLAN[idx];
+  const prompt = `You are an expert German A1 language coach. Generate a complete beginner (A1 CEFR level) day lesson.
+
+Day ${idx+1} of 60: "${d.title}" — ${d.theme}
+Week: ${d.w}
+
+STRICT A1 RULES:
+- Only use present tense (Präsens) and very simple Perfekt if the day explicitly covers past tense
+- Maximum sentence length: 8 words
+- Only common everyday vocabulary — no complex or rare words
+- Simple sentence structures: Subject + Verb + Object only
+- No subjunctive, no passive, no complex subordinate clauses
+- Articles: der/die/das must be correct and included with nouns
+- Keep grammar explanations friendly, short and encouraging — like a patient coach
+- All 20 phrases must be things a real beginner would genuinely use day one
+
+Return ONLY valid JSON (no markdown, no preamble, no trailing text):
+{
+  "phrases": [
+    {"de": "German phrase (A1 level)", "en": "English translation"},
+    ... exactly 20 items, ordered easy → slightly harder within A1
+  ],
+  "vocab": {
+    "🏢 Arbeit": [
+      {"de": "das Wort", "en": "English", "kind": "noun/verb/adj"},
+      ... exactly 5 items
+    ],
+    "🗣️ Soziales": [ ... exactly 5 items ],
+    "✈️ Reisen": [ ... exactly 5 items ]
+  },
+  "grammar": [
+    {
+      "rule": "Short, friendly grammar rule title (A1 concept)",
+      "examples": [
+        {"de": "Sentence with <hl>key word</hl> highlighted", "en": "Translation"},
+        {"de": "...", "en": "..."},
+        {"de": "...", "en": "..."}
+      ]
+    },
+    ... exactly 5 grammar points relevant to today's theme and A1 level
+  ],
+  "script": [
+    {"speaker": "A", "de": "Line (max 8 words, A1)", "en": "Translation"},
+    {"speaker": "B", "de": "Line (max 8 words, A1)", "en": "Translation"},
+    ... 8 to 10 lines total, natural short A1 conversation on today's theme
+  ],
+  "quiz": [
+    {
+      "q": "Quiz question testing today's content",
+      "opts": ["Option A", "Option B", "Option C", "Option D"],
+      "ans": 0,
+      "fb": "Short friendly explanation of why the answer is correct"
+    },
+    ... exactly 5 questions
+  ]
+}`;
+
+  try {
+    const res = await fetch("https://api.anthropic.com/v1/messages", {
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body: JSON.stringify({
+        model:"claude-sonnet-4-6",
+        max_tokens:4096,
+        messages:[{role:"user",content:prompt}]
+      })
+    });
+    if(!res.ok) throw new Error("API "+res.status);
+    const data = await res.json();
+    const raw = data.content.map(b=>b.text||'').join('');
+    const clean = raw.replace(/```json|```/g,'').trim();
+    const content = JSON.parse(clean);
+    S.cache[idx] = content;
+    save();
+    if(S.current===idx) renderDay(idx,content);
+  } catch(err) {
+    console.error(err);
+    document.getElementById('content').innerHTML = `
+      <div class="err-box">
+        <h3>Oops! Etwas ist schiefgelaufen.</h3>
+        <p>${err.message}</p>
+        <button class="btn-retry" onclick="selectDay(${idx})">↺ Nochmal versuchen</button>
+      </div>`;
+  }
+}
+
+// ═══════════════════════════════════════
+// RENDER
+// ═══════════════════════════════════════
+function renderDay(idx, c) {
+  if(S.current!==idx) return;
+  const d = PLAN[idx];
+  const learnedN = c.phrases.filter((_,pi)=>S.learned[`${idx}_${pi}`]).length;
+  const qDone = S.qDone[idx];
+  let score=0;
+  if(qDone) c.quiz.forEach((q,qi)=>{ if(S.qAns[`${idx}_${qi}`]===q.ans) score++; });
+
+  document.getElementById('content').innerHTML = `
+    <div class="day-hd">
+      <div class="day-eye">TAG ${idx+1} · WOCHE ${d.w} · A1</div>
+      <h1>${d.title}</h1>
+      <div class="theme">${d.theme}</div>
+      <div class="day-chips">
+        <div class="chip">💬 <b>${learnedN}/20</b> learned</div>
+        <div class="chip">📚 <b>15</b> vocab</div>
+        <div class="chip">⚙️ <b>5</b> grammar</div>
+        ${qDone?`<div class="chip" style="color:var(--sage)">🧠 <b>${score}/5</b> quiz</div>`:''}
+        ${S.done[idx]?`<div class="chip" style="color:var(--sage)">✅ Complete</div>`:''}
+      </div>
+    </div>
+    ${buildPhrases(idx,c)}
+    ${buildVocab(idx,c)}
+    ${buildGrammar(idx,c)}
+    ${buildSpeak(idx,c)}
+    ${buildQuiz(idx,c)}
+    ${buildComplete(idx,c,score,qDone)}
+  `;
+}
+
+/* PHRASES */
+function buildPhrases(idx,c) {
+  const o=S.openSec.ph;
+  const n=c.phrases.filter((_,pi)=>S.learned[`${idx}_${pi}`]).length;
+  return `<div class="acc ${o?'open':''}" id="acc-ph">
+    <div class="acc-head" onclick="toggleSec('ph')">
+      <div class="acc-ico" style="background:rgba(232,165,48,0.12)">💬</div>
+      <div class="acc-info">
+        <div class="acc-title">20 Essential Phrases</div>
+        <div class="acc-sub">Tap each one when you've practised it</div>
+      </div>
+      <div class="acc-tag">${n}/20</div>
+      <div class="acc-chevron">▾</div>
+    </div>
+    <div class="acc-body">
+      <div class="ph-hint">Say each phrase aloud before ticking it — that's the whole trick!</div>
+      <div class="ph-list">
+        ${c.phrases.map((p,pi)=>{
+          const done=!!S.learned[`${idx}_${pi}`];
+          return `<div class="ph-row ${done?'done':''}" onclick="togglePh(${idx},${pi})">
+            <div class="ph-de">${p.de}</div>
+            <div class="ph-en">${p.en}</div>
+            <div class="ph-tick">${done?'✓':''}</div>
+          </div>`;
+        }).join('')}
+      </div>
+    </div>
+  </div>`;
+}
+
+/* VOCAB */
+function buildVocab(idx,c) {
+  const o=S.openSec.voc;
+  return `<div class="acc ${o?'open':''}">
+    <div class="acc-head" onclick="toggleSec('voc')">
+      <div class="acc-ico" style="background:rgba(91,155,213,0.12)">📚</div>
+      <div class="acc-info">
+        <div class="acc-title">15 Vocabulary Words</div>
+        <div class="acc-sub">Tap a card to flip it and see the meaning</div>
+      </div>
+      <div class="acc-tag">3 topics</div>
+      <div class="acc-chevron">▾</div>
+    </div>
+    <div class="acc-body">
+      ${Object.entries(c.vocab).map(([theme,words])=>`
+        <div class="voc-section">
+          <div class="voc-theme">${theme}</div>
+          <div class="voc-grid">
+            ${words.map((w,wi)=>{
+              const k=`${idx}_${theme}_${wi}`.replace(/\W/g,'_');
+              const flip=!!S.flipped[k];
+              return `<div class="voc-card ${flip?'flipped':''}" id="vc_${k}" onclick="toggleVoc('${k}')">
+                <div class="voc-de">${w.de}</div>
+                <div class="voc-kind">${w.kind||''}</div>
+                <div class="voc-en">${w.en}</div>
+              </div>`;
+            }).join('')}
+          </div>
+        </div>`).join('')}
+    </div>
+  </div>`;
+}
+
+/* GRAMMAR */
+function buildGrammar(idx,c) {
+  const o=S.openSec.gram;
+  return `<div class="acc ${o?'open':''}">
+    <div class="acc-head" onclick="toggleSec('gram')">
+      <div class="acc-ico" style="background:rgba(217,96,96,0.1)">⚙️</div>
+      <div class="acc-info">
+        <div class="acc-title">5 Grammar Points</div>
+        <div class="acc-sub">Key words highlighted · 3 examples each</div>
+      </div>
+      <div class="acc-tag">5 rules</div>
+      <div class="acc-chevron">▾</div>
+    </div>
+    <div class="acc-body">
+      ${c.grammar.map((g,gi)=>`
+        <div class="gram-block">
+          <div class="gram-rule">${gi+1}. ${g.rule}</div>
+          <div class="gram-exs">
+            ${g.examples.map(ex=>`
+              <div class="gram-ex">
+                <div class="de">${ex.de.replace(/<hl>/g,'<span class="hl">').replace(/<\/hl>/g,'</span>')}</div>
+                <div class="en">${ex.en}</div>
+              </div>`).join('')}
+          </div>
+        </div>`).join('')}
+    </div>
+  </div>`;
+}
+
+/* SPEAKING */
+function buildSpeak(idx,c) {
+  const o=S.openSec.speak;
+  return `<div class="acc ${o?'open':''}">
+    <div class="acc-head" onclick="toggleSec('speak')">
+      <div class="acc-ico" style="background:rgba(122,181,122,0.1)">🎙️</div>
+      <div class="acc-info">
+        <div class="acc-title">3-Minute Speaking Exercise</div>
+        <div class="acc-sub">Read both roles aloud — use the timer</div>
+      </div>
+      <div class="acc-tag">~3 min</div>
+      <div class="acc-chevron">▾</div>
+    </div>
+    <div class="acc-body">
+      <div class="speak-tip">
+        <strong>Coach tip:</strong> Read every line out loud, playing both speakers. Go slowly. Repeat the whole script until it feels natural. Recording yourself is the fastest way to improve!
+      </div>
+      <div class="script-box">
+        ${c.script.map(l=>`
+          <div class="sc-line">
+            <div><span class="sc-who ${l.speaker==='A'?'who-a':'who-b'}">${l.speaker}</span><span class="sc-de">${l.de}</span></div>
+            <div class="sc-en">${l.en}</div>
+          </div>`).join('')}
+      </div>
+      <div class="timer-row">
+        <div class="timer-dig" id="timerDig">03:00</div>
+        <button class="btn-t" id="timerBtn" onclick="toggleTimer()">▶ Start</button>
+        <button class="btn-tr" onclick="resetTimer()">↺ Reset</button>
+      </div>
+    </div>
+  </div>`;
+}
+
+/* QUIZ */
+function buildQuiz(idx,c) {
+  const o=S.openSec.quiz;
+  const done=S.qDone[idx];
+  let score=0;
+  if(done) c.quiz.forEach((q,qi)=>{ if(S.qAns[`${idx}_${qi}`]===q.ans) score++; });
+  return `<div class="acc ${o?'open':''}">
+    <div class="acc-head" onclick="toggleSec('quiz')">
+      <div class="acc-ico" style="background:rgba(232,165,48,0.08)">🧠</div>
+      <div class="acc-info">
+        <div class="acc-title">Daily Quiz</div>
+        <div class="acc-sub">${done?`Score: ${score}/5 · ${score===5?'Perfect!':'Review misses above'}`:'5 questions — test everything'}</div>
+      </div>
+      <div class="acc-tag" style="${done?'color:var(--sage)':''}">${done?score+'/5 ✓':'5 Qs'}</div>
+      <div class="acc-chevron">▾</div>
+    </div>
+    <div class="acc-body">
+      ${done?`<div class="score-card">
+        <div class="score-big" style="color:${score===5?'var(--sage)':score>=3?'var(--amber)':'var(--rose)'}">${score}/5</div>
+        <div class="score-lbl">correct answers</div>
+        <div class="score-msg">${score===5?'🏆 Perfekt! Ausgezeichnet!':score>=3?'👍 Gut! A little more practice and you\'ll have it.':'📚 Üben, üben, üben! Every mistake is a lesson.'}</div>
+      </div>`:`<div class="quiz-note">💡 Go through the phrases and vocab first — then the answers will feel obvious!</div>`}
+      ${c.quiz.map((q,qi)=>{
+        const sel=S.qAns[`${idx}_${qi}`];
+        const ok=done&&sel===q.ans;
+        const bad=done&&sel!==undefined&&sel!==q.ans;
+        return `<div class="q-card ${done&&ok?'q-ok':''} ${done&&bad?'q-bad':''}">
+          <div class="q-num">FRAGE ${qi+1} / 5</div>
+          <div class="q-text">${q.q}</div>
+          <div class="q-opts">
+            ${q.opts.map((opt,oi)=>{
+              let cls = sel===oi&&!done?'sel':'';
+              if(done){ cls=oi===q.ans?'ok':(oi===sel&&sel!==q.ans?'bad':''); }
+              return `<button class="q-opt ${cls}" onclick="ansQ(${idx},${qi},${oi})" ${done?'disabled':''}>${opt}</button>`;
+            }).join('')}
+          </div>
+          ${done?`<div class="q-fb">💡 ${q.fb}</div>`:''}
+        </div>`;
+      }).join('')}
+      ${!done?`<button class="btn-check" onclick="submitQ(${idx})">Antworten prüfen →</button>`:''}
+    </div>
+  </div>`;
+}
+
+/* COMPLETE BLOCK */
+function buildComplete(idx,c,score,qDone) {
+  if(S.done[idx]) {
+    return idx<59?`<div class="complete-box">
+      <h3>✅ Tag ${idx+1} abgeschlossen!</h3>
+      <p>Great work! Ready for the next challenge?</p>
+      <button class="btn-next-day" onclick="selectDay(${idx+1})">Start Tag ${idx+2} →</button>
+    </div>`:
+    `<div class="complete-box"><h3>🎓 60 Tage — Du hast es geschafft!</h3><p>You completed the entire A1 course. Herzlichen Glückwunsch!</p></div>`;
+  }
+  if(qDone) return `<div class="complete-box">
+    <h3>${score>=4?'🎉 Wunderbar!':'📖 Almost there!'}</h3>
+    <p>${score>=4?'You nailed today\'s lesson. Mark it complete and keep your streak alive!':'Review the sections above, then mark complete when you feel confident.'}</p>
+    <button class="btn-complete" onclick="completeDay(${idx})">✓ Mark Day ${idx+1} Complete</button>
+    ${idx<59?`<button class="btn-next-day" onclick="completeDay(${idx},true)">Complete & Start Day ${idx+2} →</button>`:''}
+  </div>`;
+  return '';
+}
+
+// ═══════════════════════════════════════
+// INTERACTIONS
+// ═══════════════════════════════════════
+function toggleSec(k) {
+  S.openSec[k]=!S.openSec[k];
+  if(S.current!==null&&S.cache[S.current]) renderDay(S.current,S.cache[S.current]);
+}
+function togglePh(idx,pi) {
+  S.learned[`${idx}_${pi}`]=!S.learned[`${idx}_${pi}`];
+  save();
+  renderDay(idx,S.cache[idx]);
+}
+function toggleVoc(k) {
+  S.flipped[k]=!S.flipped[k];
+  const el=document.getElementById('vc_'+k);
+  if(el) el.classList.toggle('flipped',!!S.flipped[k]);
+  save();
+}
+function ansQ(idx,qi,oi) {
+  if(S.qDone[idx]) return;
+  S.qAns[`${idx}_${qi}`]=oi;
+  save();
+  renderDay(idx,S.cache[idx]);
+}
+function submitQ(idx) {
+  S.qDone[idx]=true;
+  save();
+  renderDay(idx,S.cache[idx]);
+}
+function completeDay(idx, goNext=false) {
+  S.done[idx]=true;
+  save();
+  buildSidebar();
+  if(goNext && idx<59) { selectDay(idx+1); return; }
+  renderDay(idx,S.cache[idx]);
+}
+
+// ── TIMER ──
+function toggleTimer() {
+  if(S.timer.running) {
+    clearInterval(S.timer.iv);
+    S.timer.running=false;
+    const b=document.getElementById('timerBtn');
+    if(b) b.textContent='▶ Resume';
+  } else {
+    S.timer.running=true;
+    const b=document.getElementById('timerBtn');
+    if(b) b.textContent='⏸ Pause';
+    S.timer.iv=setInterval(()=>{
+      S.timer.s--;
+      const el=document.getElementById('timerDig');
+      if(!el){ clearInterval(S.timer.iv); return; }
+      if(S.timer.s<=0){
+        clearInterval(S.timer.iv);
+        S.timer.running=false;
+        S.timer.s=180;
+        el.textContent='🎉';
+        const b=document.getElementById('timerBtn');
+        if(b) b.textContent='▶ Again';
+        return;
+      }
+      const m=Math.floor(S.timer.s/60).toString().padStart(2,'0');
+      const s=(S.timer.s%60).toString().padStart(2,'0');
+      el.textContent=`${m}:${s}`;
+    },1000);
+  }
+}
+function resetTimer() {
+  clearInterval(S.timer.iv);
+  S.timer.running=false;
+  S.timer.s=180;
+  const el=document.getElementById('timerDig');
+  if(el) el.textContent='03:00';
+  const b=document.getElementById('timerBtn');
+  if(b) b.textContent='▶ Start';
+}
+function stopTimer() {
+  clearInterval(S.timer.iv);
+  S.timer.running=false;
+  S.timer.s=180;
+}
+
+// ═══════════════════════════════════════
+// BOOT
+// ═══════════════════════════════════════
+load();
+buildSidebar();
+</script>
+</body>
+</html>
